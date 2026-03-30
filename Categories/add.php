@@ -1,9 +1,9 @@
 <?php
 require_once '../Database.php';
-require_once 'Product.php';
+require_once 'Category.php';
 
 $db = (new Database)->connect();
-$addModel = new Product($db);
+$addtModel = new Category($db);
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
     if(isset($_POST[$addModel->tableName]) && is_array($_POST[$addModel->tableName])){
@@ -16,7 +16,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         header("Location: list.php?message=Saved successfully");
         exit;
     } else {
-        header("Location: form.php?error=Failed to save product.");
+        header("Location: form.php?error=Failed to save category.");
         exit;
     }
 }
