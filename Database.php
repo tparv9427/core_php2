@@ -55,4 +55,29 @@ class Database
         }
         return false;
     }
+
+    public function fetchOne($query)
+    {
+        $result = $this->conn->query($query);
+        if ($result && $result->num_rows > 0) {
+            $row = $result->fetch_row();
+            return $row[0];
+        }
+        return false;
+    }
+
+    public function fetchPair($query)
+    {
+        $result = $this->conn->query($query);
+        if (! $result || $result->num_rows === 0) {
+            return false;
+        }
+
+        $pairs = [];
+        while ($row = $result->fetch_row()) {
+            $pairs[$row[0]] = $row[1];
+        }
+
+        return $pairs;
+    }
 }
