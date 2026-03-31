@@ -30,18 +30,20 @@ class Row
 
     public function insert()
     {
-        $vals = [];
-        $cols = [];
-        foreach($this->data as $key => $value){
-            $vals[$key] = $value;
-            $cols[$key] = $key;
+        $columnNames = "";
+        $columnValues = "";
+
+        foreach ($this->data as $column => $value) {
+            $columnNames .= $column . ", ";
+            $columnValues .= "'" . $value . "', ";
         }
 
+        $columnNames = rtrim($columnNames, ", ");
+        $columnValues = rtrim($columnValues, ", ");
 
-        $values = implode(",",$vals);
-        $columns = implode(",",$cols);
-        $query = "Insert into {$this->tableName}({$columns}) values ({$values});";
-        $newId = $this->db->insert($query);
+        $sql = "INSERT INTO {$this->tableName} ($columnNames) VALUES ($columnValues)";
+
+        $newId = $this->db->insert($sql);
         if ($newId !== false) {
             $this->data[$this->primaryKey] = $newId;
             return $this;
@@ -51,27 +53,28 @@ class Row
 
     public function update()
     {
-        if(!isset($this->data[$this->primaryKey])){
+        if (!isset($this->data[$this->primaryKey])) {
             return false;
         }
+        $primaryKeyValue = $this->data[$this->primaryKey];
 
-        $primarykeyvalue = $this->data[$this->primaryKey];
-        $updatecols = [];
-        foreach($this->data as $key => $value){
-            if($key === $this->primaryKey){
+        $updateString = "";
+        foreach ($this->data as $column => $value) {
+            if ($column === $this->primaryKey) {
                 continue;
             }
-            $updatecols[$key] = $value;
+            $updateString .= "$column = '{$value}', ";
         }
-        $updatecols = implode(",",$updatecols);
+        $updateString = rtrim($updateString, ", ");
 
-        $query = "Update {$this->tableName} set {$updatecols} where {$this->primaryKey} = {$primarykeyvalue};";
-        if($this->db->update($query)){
+        $sql = "UPDATE {$this->tableName} SET {$updateString} WHERE {$this->primaryKey} = '{$primaryKeyValue}'";
+
+        if ($this->db->update($sql)) {
             return $this;
         }
         return false;
     }
-
+        
     public function save()
     {
         if (isset($this->data[$this->primaryKey]) && !empty($this->data[$this->primaryKey])) {

@@ -7,7 +7,7 @@ $db = (new Database)->connect();
 $customerModel = new Customers($db);
 $customerGroupModel = new CustomerGroups($db);
 
-$query = "SELECT c.*, FROM {$customerModel->tableName} c LEFT JOIN {$customerGroupModel->tableName} cg ON c.{$customerGroupModel->primaryKey} = cg.{$customerGroupModel->primaryKey} ORDER BY C.{$customerModel->primaryKey} DESC";
+$query = "SELECT c.*,cg.group_name FROM {$customerModel->tableName} c LEFT JOIN {$customerGroupModel->tableName} cg ON c.{$customerGroupModel->primaryKey} = cg.{$customerGroupModel->primaryKey} ORDER BY C.{$customerModel->primaryKey} DESC";
 $db->fetchAll($query)?:[];
 include 'grid.php';
 ?>

@@ -10,9 +10,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         $editModel->load($_POST[$editModel->primaryKey]);
     }
 
-    if(isset($_POST[$editModel->primaryKey]) && is_array($_POST[$editModel->primaryKey])){
-        foreach($_POST[$editModel->primaryKey] as $key => $value){
-            $productModel->value($key,$value);
+    if(isset($_POST[$editModel->tableName]) && is_array($_POST[$editModel->tableName])){
+        foreach($_POST[$editModel->tableName] as $key => $value){
+            $editModel->value($key,$value);
         }
     }
     if(isset($_POST[$editModel->primaryKey]) && !empty($_POST[$editModel->primaryKey])){
